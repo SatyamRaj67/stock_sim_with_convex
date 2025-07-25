@@ -5,7 +5,7 @@ export const createPasswordResetToken = mutation({
   args: {
     identifier: v.string(),
     token: v.string(),
-    expires: v.number(), // timestamp
+    expires: v.number(),
   },
   handler: async (ctx, { identifier, token, expires }) => {
     try {

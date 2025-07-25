@@ -6,12 +6,14 @@ import { type Validator, v } from "convex/values";
 
 export const userSchema = {
   email: v.string(),
-  name: v.optional(v.string()),
+  name: v.string(),
   emailVerified: v.optional(v.number()),
   image: v.optional(v.string()),
   password: v.optional(v.string()),
-  role: v.optional(v.string()),
+  role: v.string(),
   isTwoFactorEnabled: v.optional(v.boolean()),
+
+  balance: v.number(),
 };
 
 export const sessionSchema = {

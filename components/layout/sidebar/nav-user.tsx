@@ -103,13 +103,6 @@ export function NavUser({ user }: { user?: ExtendedUser }) {
                 <Link href="/notifications">Notifications</Link>
               </DropdownMenuItem>
             </DropdownMenuGroup>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem>
-              <LogoutButton>
-                <TbLogout />
-                Log Out
-              </LogoutButton>
-            </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
       </SidebarMenuItem>

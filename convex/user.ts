@@ -1,5 +1,14 @@
 import { v } from "convex/values";
 import { mutation, query } from "./_generated/server";
+import { UserRole } from "../types";
+
+export const getUser = query({
+  args: {},
+  handler: async (ctx) => {
+    const user = await ctx.auth.getUserIdentity();
+    return user;
+  }
+})
 
 export const getUserByEmail = query({
   args: { email: v.string() },
@@ -40,6 +49,8 @@ export const createUser = mutation({
         name,
         email,
         password,
+        balance: 10000,
+        role: UserRole.USER,
       });
       const user = await ctx.db.get(userId);
       return user;
@@ -59,6 +70,8 @@ export const updateUserById = mutation({
       emailVerified: v.optional(v.number()),
       role: v.optional(v.string()),
       isTwoFactorEnabled: v.optional(v.boolean()),
+
+      balance: v.optional(v.number()),
     }),
   },
   handler: async (ctx, { id, data }) => {

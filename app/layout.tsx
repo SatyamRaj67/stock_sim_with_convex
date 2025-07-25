@@ -1,6 +1,8 @@
+import ConvexClientProvider from "@/components/auth/convex/convex-provider-with-auth";
 import { Header } from "@/components/layout/header";
 import { AppSidebar } from "@/components/layout/sidebar/app-sidebar";
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
+import { env } from "@/env";
 import { auth } from "@/server/auth";
 import "@/styles/globals.css";
 
@@ -43,7 +45,7 @@ export default async function RootLayout({
         )} */}
       </head>
       <body>
-        <SessionProvider session={session}>
+        <ConvexClientProvider session={session}>
           <ThemeProvider
             attribute="class"
             defaultTheme="system"
@@ -65,7 +67,7 @@ export default async function RootLayout({
               </SidebarProvider>
             </TRPCReactProvider>
           </ThemeProvider>
-        </SessionProvider>
+        </ConvexClientProvider>
       </body>
     </html>
   );

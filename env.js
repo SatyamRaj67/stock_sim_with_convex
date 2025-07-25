@@ -29,6 +29,9 @@ export const env = createEnv({
   client: {
     // NEXT_PUBLIC_CLIENTVAR: z.string(),
     NEXT_PUBLIC_API_URL: z.string().url().default("http://localhost:3000"),
+    NEXT_PUBLIC_REFERRAL_KEY: z.string().default("A1B2C3D4"),
+  
+    NEXT_PUBLIC_CONVEX_URL: z.string().url().default("http://localhost:3000/convex"),
   },
 
   /**
@@ -50,6 +53,9 @@ export const env = createEnv({
 
     // NEXT_PUBLIC_CLIENTVAR: process.env.NEXT_PUBLIC_CLIENTVAR,
     NEXT_PUBLIC_API_URL: process.env.NEXT_PUBLIC_API_URL,
+    NEXT_PUBLIC_REFERRAL_KEY: process.env.NEXT_PUBLIC_REFERRAL_KEY,
+
+    NEXT_PUBLIC_CONVEX_URL: process.env.NEXT_PUBLIC_CONVEX_URL,
   },
   /**
    * Run `build` or `dev` with `SKIP_ENV_VALIDATION` to skip env validation. This is especially
