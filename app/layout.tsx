@@ -13,6 +13,8 @@ import { Toaster } from "sonner";
 
 import { TRPCReactProvider } from "trpc/react";
 
+import { Analytics } from "@vercel/analytics/next"
+
 export const metadata: Metadata = {
   title: "SmartStock - Your Smart Trading Partner",
   description: "SmartStock - Your Smart Trading Partner",
@@ -59,6 +61,7 @@ export default async function RootLayout({
                   <main>
                     <Toaster />
                     {children}
+                    <Analytics />
                   </main>
                 </SidebarInset>
               </SidebarProvider>
