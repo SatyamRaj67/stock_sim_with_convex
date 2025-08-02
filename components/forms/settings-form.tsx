@@ -183,7 +183,7 @@ const SettingsForm = () => {
                     <FormLabel>Role</FormLabel>
                     <Select
                       disabled={
-                        isPending || session.data?.user.role === UserRole.USER
+                        isPending || session.data?.user.role !== UserRole.ADMIN
                       }
                       onValueChange={field.onChange}
                       defaultValue={field.value}
