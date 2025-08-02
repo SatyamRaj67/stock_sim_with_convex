@@ -18,7 +18,7 @@ const config = {
       },
       {
         protocol: "https",
-        hostname: "loremflickr.com",
+        hostname: "storage.googleapis.com",
       },
     ],
   },

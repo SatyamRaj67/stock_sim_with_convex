@@ -23,6 +23,7 @@ export const getUserByEmail = query({
     }
   },
 });
+
 export const getAllUsers = query({
   args: {
     paginationOpts: paginationOptsValidator,

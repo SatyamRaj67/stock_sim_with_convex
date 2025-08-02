@@ -12,7 +12,7 @@ import {
   type SortingState,
   useReactTable,
 } from "@tanstack/react-table";
-import { TbDotsVertical, TbLayoutColumns } from "react-icons/tb";
+import { TbDotsVertical, TbLayoutColumns, TbPlus } from "react-icons/tb";
 
 import { api } from "@/convex/_generated/api";
 import type { Doc } from "@/convex/_generated/dataModel";
@@ -37,23 +37,11 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { DataTablePagination } from "@/components/tables/common/data-table-pagination";
-
-// Helper to format large numbers
-const formatMarketCap = (value: number) => {
-  if (value >= 1_000_000_000_000) {
-    return `${(value / 1_000_000_000_000).toFixed(2)}T`;
-  }
-  if (value >= 1_000_000_000) {
-    return `${(value / 1_000_000_000).toFixed(2)}B`;
-  }
-  if (value >= 1_000_000) {
-    return `${(value / 1_000_000).toFixed(2)}M`;
-  }
-  return value.toString();
-};
+import { usePathname } from "next/navigation";
+import { AddStocksDialog } from "../dialogs/addStocks-dialog";
 
 // Define the columns for the table
-export const columns: ColumnDef<Doc<"stock">>[] = [
+export const baseColumns: ColumnDef<Doc<"stock">>[] = [
   {
     accessorKey: "name",
     header: ({ column }) => (
@@ -66,13 +54,13 @@ export const columns: ColumnDef<Doc<"stock">>[] = [
     ),
     cell: ({ row }) => (
       <div className="flex items-center gap-3">
-        {/* <Image
+        <Image
           src={row.original.logoUrl ?? "/placeholder.svg"}
           alt={row.original.name ?? "Stock logo"}
           width={32}
           height={32}
           className="rounded-full object-cover"
-        /> */}
+        />
         <div className="flex flex-col">
           <div className="font-medium">{row.original.symbol}</div>
           <div className="text-muted-foreground max-w-40 truncate text-xs">
@@ -107,7 +95,11 @@ export const columns: ColumnDef<Doc<"stock">>[] = [
       </Button>
     ),
     cell: ({ row }) => (
-      <div>{formatMarketCap(row.getValue("marketCap") as number)}</div>
+      <div>
+        {row.getValue("marketCap")
+          ? `$${(row.getValue("marketCap") as number).toFixed(2)}`
+          : "N/A"}
+      </div>
     ),
   },
   {
@@ -139,36 +131,62 @@ export const columns: ColumnDef<Doc<"stock">>[] = [
       );
     },
   },
-  {
-    id: "actions",
-    header: "Actions",
-    cell: ({ row }) => {
-      return (
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="ghost" className="h-8 w-8 p-0">
-              <span className="sr-only">Open menu</span>
-              <TbDotsVertical className="h-4 w-4" />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            <DropdownMenuLabel>Actions</DropdownMenuLabel>
-            <DropdownMenuItem>View Details</DropdownMenuItem>
-            <DropdownMenuItem>Edit Stock</DropdownMenuItem>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem variant="destructive">
-              Delete Stock
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
-      );
-    },
-  },
 ];
 
 export function StocksTable() {
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [searchQuery, setSearchQuery] = React.useState("");
+  const [addStocksDialogOpen, setAddStocksDialogOpen] = React.useState(false);
+
+  const pathName = usePathname();
+
+  const columns = React.useMemo<ColumnDef<Doc<"stock">>[]>(() => {
+    const allColumns = [...baseColumns];
+
+    if (pathName.includes("/admin")) {
+      allColumns.push({
+        accessorKey: "_creationTime",
+        header: ({ column }) => (
+          <Button
+            variant="ghost"
+            onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+          >
+            Created At
+          </Button>
+        ),
+        cell: ({ row }) =>
+          new Date(row.original._creationTime).toLocaleDateString(),
+      });
+
+      allColumns.push({
+        id: "actions",
+        header: "Actions",
+        cell: ({ row }) => {
+          return (
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="ghost" className="h-8 w-8 p-0">
+                  <span className="sr-only">Open menu</span>
+                  <TbDotsVertical className="h-4 w-4" />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end">
+                <DropdownMenuLabel>Actions</DropdownMenuLabel>
+                <DropdownMenuItem>View Details</DropdownMenuItem>
+                <DropdownMenuItem>Edit Stock</DropdownMenuItem>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem variant="destructive">
+                  Delete Stock
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          );
+        },
+      });
+    }
+
+    return allColumns;
+  }, [pathName]);
 
   const {
     results: data,
@@ -194,6 +212,10 @@ export function StocksTable() {
     },
   });
 
+  const onClick = () => {
+    setAddStocksDialogOpen(true);
+  };
+
   return (
     <div className="w-full space-y-4">
       <div className="flex items-center justify-between">
@@ -203,6 +225,12 @@ export function StocksTable() {
           onChange={(event) => setSearchQuery(event.target.value)}
           className="max-w-sm"
         />
+        {pathName.includes("/admin") && (
+          <Button className="mx-2" onClick={onClick}>
+            <TbPlus />
+            Add Stocks
+          </Button>
+        )}
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button variant="outline" className="ml-auto">
@@ -275,6 +303,10 @@ export function StocksTable() {
         </Table>
       </div>
       <DataTablePagination table={table} status={status} loadMore={loadMore} />
+      <AddStocksDialog
+        open={addStocksDialogOpen}
+        onOpenChange={setAddStocksDialogOpen}
+      />
     </div>
   );
 }

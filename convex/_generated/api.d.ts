@@ -14,12 +14,11 @@ import type {
   FunctionReference,
 } from "convex/server";
 import type * as account from "../account.js";
-import type * as app from "../app.js";
 import type * as authAdapter from "../authAdapter.js";
 import type * as http from "../http.js";
 import type * as passwordResetToken from "../passwordResetToken.js";
-import type * as seed from "../seed.js";
 import type * as stock from "../stock.js";
+import type * as transaction from "../transaction.js";
 import type * as twoFactorConfirmation from "../twoFactorConfirmation.js";
 import type * as twoFactorToken from "../twoFactorToken.js";
 import type * as user from "../user.js";
@@ -36,12 +35,11 @@ import type * as verificationToken from "../verificationToken.js";
  */
 declare const fullApi: ApiFromModules<{
   account: typeof account;
-  app: typeof app;
   authAdapter: typeof authAdapter;
   http: typeof http;
   passwordResetToken: typeof passwordResetToken;
-  seed: typeof seed;
   stock: typeof stock;
+  transaction: typeof transaction;
   twoFactorConfirmation: typeof twoFactorConfirmation;
   twoFactorToken: typeof twoFactorToken;
   user: typeof user;
