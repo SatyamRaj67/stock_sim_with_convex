@@ -7,8 +7,8 @@ export const getTwoFactorConfirmationByUserId = query({
     try {
       const twoFactorConfirmation = await ctx.db
         .query("twoFactorConfirmations")
-        .filter((q) => q.eq(q.field("userId"), userId))
-        .unique();
+        .withIndex("userId", (q) => q.eq("userId", userId))
+        .first();
       return twoFactorConfirmation;
     } catch {
       return null;
@@ -50,8 +50,8 @@ export const deleteTwoFactorConfirmationByUserId = mutation({
     try {
       const twoFactorConfirmation = await ctx.db
         .query("twoFactorConfirmations")
-        .filter((q) => q.eq(q.field("userId"), userId))
-        .unique();
+        .withIndex("userId", (q) => q.eq("userId", userId))
+        .first();
 
       if (twoFactorConfirmation) {
         await ctx.db.delete(twoFactorConfirmation._id);

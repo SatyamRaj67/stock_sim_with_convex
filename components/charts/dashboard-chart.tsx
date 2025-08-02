@@ -136,7 +136,7 @@ const chartConfig = {
   },
 } satisfies ChartConfig;
 
-export function StockChart() {
+export function DashboardChart() {
   const [timeRange, setTimeRange] = React.useState("90d");
 
   const filteredData = chartData.filter((item) => {
@@ -257,6 +257,7 @@ export function StockChart() {
               stroke="var(--color-desktop)"
               stackId="a"
             />
+            <ChartLegend content={<ChartLegendContent />} />
           </AreaChart>
         </ChartContainer>
       </CardContent>

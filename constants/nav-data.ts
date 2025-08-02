@@ -70,7 +70,7 @@ export const navData = {
     },
     {
       title: "Get Help",
-      url: "/help",
+      url: "/billing",
       icon: TbHelp,
     },
   ],

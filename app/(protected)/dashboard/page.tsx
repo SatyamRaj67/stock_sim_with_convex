@@ -1,34 +1,46 @@
 "use client";
 
-import InfoCard from "@/components/card/info-card";
-import { StockChart } from "@/components/charts/stock-chart";
+import { InfoCard } from "@/components/card/info-card";
+import { DashboardChart } from "@/components/charts/dashboard-chart";
+// import { DashboardTable } from "@/components/tables/users-table";
 import { api } from "@/convex/_generated/api";
+import { formatToCurrency } from "@/lib/format";
 import { useQuery } from "convex/react";
-import { Wallet } from "lucide-react";
 import { useSession } from "next-auth/react";
+import { redirect } from "next/navigation";
 
 export default function DashboardPage() {
-  const { data: session } = useSession();
-  const user = useQuery(api.user.getUserById, { id: session!.user.id });
+  const session = useSession();
+
+  if (!session?.data?.user) {
+    redirect("/auth/signin");
+  }
+
+  const userData = useQuery(api.userData.getUserDataByUserId, {
+    userId: session?.data.user?.id,
+  });
+
   return (
-    <div className="container flex-1 space-y-4 p-2 pt-6 md:p-8">
-      <h1 className="text-3xl font-bold tracking-tight">Dashboard</h1>
+    <div className="w-full flex-1 space-y-4 p-2 pt-6 md:p-8">
+      <h2 className="text-3xl font-bold tracking-tight">Dashboard</h2>
+
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-        <InfoCard title="Portfolio Value" value={"under construction"} />
+        <InfoCard title="Balance" value={formatToCurrency(userData?.balance)} />
         <InfoCard
-          title="Available Balance"
-          value={user?.balance ? `$${user.balance.toLocaleString()}` : "$0"}
-          description="The current balance of the user."
-          icon={<Wallet className="h-4 w-4" />}
-          badge={{ text: "New" }}
+          title="Portfolio Value"
+          value={formatToCurrency(userData?.portfolioValue)}
         />
-        <InfoCard title="Market Overview" value={"under construction"} />
         <InfoCard
-          title="Gain/Loss from last time"
-          value={"under construction"}
+          title="Total Profit"
+          value={formatToCurrency(userData?.totalProfit)}
+        />
+        <InfoCard
+          title="Total Investment"
+          value={formatToCurrency(userData?.totalInvestment)}
         />
       </div>
-      <StockChart />
+      <DashboardChart />
+      {/* <DashboardTable data={data} /> */}
     </div>
   );
 }

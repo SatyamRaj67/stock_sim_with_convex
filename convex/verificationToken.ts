@@ -7,7 +7,7 @@ export const getVerificationTokenByEmail = query({
     try {
       const verificationToken = await ctx.db
         .query("verificationTokens")
-        .filter((q) => q.eq(q.field("identifier"), email))
+        .withIndex("identifier", (q) => q.eq("identifier", email))
         .first();
       return verificationToken;
     } catch {
@@ -22,8 +22,9 @@ export const getVerificationTokenByToken = query({
     try {
       const verificationToken = await ctx.db
         .query("verificationTokens")
-        .filter((q) => q.eq(q.field("token"), token))
-        .unique();
+        .withIndex("token", (q) => q.eq("token", token))
+        .first();
+
       return verificationToken;
     } catch {
       return null;
@@ -33,9 +34,9 @@ export const getVerificationTokenByToken = query({
 
 export const createVerificationToken = mutation({
   args: {
-    identifier: v.string(), 
+    identifier: v.string(),
     token: v.string(),
-    expires: v.number(), 
+    expires: v.number(),
   },
   handler: async (ctx, { identifier, token, expires }) => {
     try {

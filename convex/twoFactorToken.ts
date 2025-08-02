@@ -7,8 +7,8 @@ export const getTwoFactorTokenByToken = query({
     try {
       const twoFactorToken = await ctx.db
         .query("twoFactorTokens")
-        .filter((q) => q.eq(q.field("token"), token))
-        .unique();
+        .withIndex("token", (q) => q.eq("token", token))
+        .first();
       return twoFactorToken;
     } catch {
       return null;
@@ -22,7 +22,7 @@ export const getTwoFactorTokenByIdentifier = query({
     try {
       const twoFactorToken = await ctx.db
         .query("twoFactorTokens")
-        .filter((q) => q.eq(q.field("identifier"), identifier))
+        .withIndex("identifier", (q) => q.eq("identifier", identifier))
         .first();
       return twoFactorToken;
     } catch {

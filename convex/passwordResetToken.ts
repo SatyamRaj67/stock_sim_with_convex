@@ -5,7 +5,7 @@ export const createPasswordResetToken = mutation({
   args: {
     identifier: v.string(),
     token: v.string(),
-    expires: v.number(),
+    expires: v.number(), // timestamp
   },
   handler: async (ctx, { identifier, token, expires }) => {
     try {
@@ -28,7 +28,7 @@ export const getPasswordResetTokenByIdentifier = query({
     try {
       const passwordResetToken = await ctx.db
         .query("passwordResetTokens")
-        .filter((q) => q.eq(q.field("identifier"), identifier))
+        .withIndex("identifier", (q) => q.eq("identifier", identifier))
         .first();
       return passwordResetToken;
     } catch {
@@ -43,8 +43,9 @@ export const getPasswordResetTokenByToken = query({
     try {
       const passwordResetToken = await ctx.db
         .query("passwordResetTokens")
-        .filter((q) => q.eq(q.field("token"), token))
-        .unique();
+        .withIndex("token", (q) => q.eq("token", token))
+        .first();
+        
       return passwordResetToken;
     } catch {
       return null;

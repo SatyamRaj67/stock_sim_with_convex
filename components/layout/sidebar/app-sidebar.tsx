@@ -22,15 +22,22 @@ import { NavSecondary } from "@/components/layout/sidebar/nav-secondary";
 import { NavUser } from "@/components/layout/sidebar/nav-user";
 import { NavAdmin } from "@/components/layout/sidebar/nav-admin";
 
-import { useCurrentUser } from "@/hooks/useCurrentUser";
-
-import { navData } from "@/constants/nav-data";
-import { RoleGate } from "@/components/auth/role-gate";
 import { usePathname } from "next/navigation";
+import { RoleGate } from "@/components/auth/role-gate";
 import { UserRole } from "@/types";
+import { navData } from "@/constants/nav-data";
+import { useQuery } from "convex/react";
+import { api } from "@/convex/_generated/api";
+import { useSession } from "next-auth/react";
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
-  const user = useCurrentUser();
+  const session = useSession()
+
+  if (!session.data?.user) {
+    return null;
+  }
+
+  const user = useQuery(api.user.getUserById, {id: session.data?.user.id})
 
   const pathname = usePathname();
   const { isMobile, setOpenMobile } = useSidebar();

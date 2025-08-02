@@ -6,7 +6,10 @@ import {
   authRoutes,
   publicRoutes,
   DEFAULT_LOGIN_REDIRECT,
+  adminPrefix,
+  DEFAULT_USER_REDIRECT,
 } from "@/routes";
+import { UserRole } from "./types";
 
 const { auth } = NextAuth(authConfig);
 
@@ -15,6 +18,7 @@ export default auth((req) => {
   const isLoggedIn = !!req.auth;
 
   const isApiAuthRoute = nextUrl.pathname.startsWith(apiAuthPrefix);
+  const isAdminRoute = nextUrl.pathname.startsWith(adminPrefix);
   const isPublicRoute = publicRoutes.includes(nextUrl.pathname);
   const isAuthRoute = authRoutes.includes(nextUrl.pathname);
 
@@ -40,6 +44,10 @@ export default auth((req) => {
     return Response.redirect(
       new URL(`/auth/login?callbackUrl=${encodedCallbackUrl}`, nextUrl),
     );
+  }
+
+  if (isAdminRoute && req.auth?.user.role !== UserRole.ADMIN) {
+    return Response.redirect(new URL(DEFAULT_USER_REDIRECT, nextUrl));
   }
 
   return;

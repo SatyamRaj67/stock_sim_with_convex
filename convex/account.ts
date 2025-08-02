@@ -7,8 +7,9 @@ export const getAccountByUserId = query({
     try {
       const account = await ctx.db
         .query("accounts")
-        .filter((q) => q.eq(q.field("userId"), userId))
+        .withIndex("userId", (q) => q.eq("userId", userId))
         .first();
+
       return account;
     } catch {
       return null;

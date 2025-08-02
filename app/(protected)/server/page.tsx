@@ -1,15 +1,20 @@
 import { UserInfo } from "@/components/user-info";
+import { api } from "@/convex/_generated/api";
 import { currentUser } from "@/lib/auth";
+import { useQuery } from "convex/react";
+import { redirect } from "next/navigation";
 import React from "react";
 
 const ServerPage = async () => {
-  const user = await currentUser();
-  return (
-    <UserInfo
-      label="💻Server Component"
-      user={user}
-    />
-  );
+  const user = useQuery(api.user.getUserById, {
+    id: (await currentUser())!.id!,
+  });
+
+  if (!user) {
+    redirect("/login");
+  }
+  
+  return <UserInfo label="💻Server Component" user={user} />;
 };
 
 export default ServerPage;

@@ -1,14 +1,12 @@
-import ConvexClientProvider from "@/components/auth/convex/convex-provider-with-auth";
 import { Header } from "@/components/layout/header";
 import { AppSidebar } from "@/components/layout/sidebar/app-sidebar";
+import ConvexClientProvider from "@/components/providers/convex/convex-provider-with-auth";
+import { ThemeProvider } from "@/components/providers/themes/theme-provider";
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
-import { env } from "@/env";
 import { auth } from "@/server/auth";
 import "@/styles/globals.css";
 
 import { type Metadata } from "next";
-import { SessionProvider } from "next-auth/react";
-import { ThemeProvider } from "next-themes";
 import { Geist } from "next/font/google";
 import { cookies } from "next/headers";
 import { Toaster } from "sonner";
@@ -29,10 +27,11 @@ const geist = Geist({
 export default async function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
+  const session = await auth();
+
   const cookieStore = await cookies();
   const defaultOpen = cookieStore.get("sidebar_state")?.value === "true";
 
-  const session = await auth();
   return (
     <html lang="en" className={`${geist.variable}`} suppressHydrationWarning>
       <head>
@@ -46,27 +45,25 @@ export default async function RootLayout({
       </head>
       <body>
         <ConvexClientProvider session={session}>
-          <ThemeProvider
-            attribute="class"
-            defaultTheme="system"
-            enableSystem
-            disableTransitionOnChange
-          >
-            <TRPCReactProvider>
+          <TRPCReactProvider>
+            <ThemeProvider
+              attribute="class"
+              defaultTheme="system"
+              enableSystem
+              disableTransitionOnChange
+            >
               <SidebarProvider defaultOpen={defaultOpen}>
                 <AppSidebar />
                 <SidebarInset>
+                  <Header />
                   <main>
-                    <Header />
                     <Toaster />
                     {children}
-                    {/* <Analytics />
-                    <SpeedInsights /> */}
                   </main>
                 </SidebarInset>
               </SidebarProvider>
-            </TRPCReactProvider>
-          </ThemeProvider>
+            </ThemeProvider>
+          </TRPCReactProvider>
         </ConvexClientProvider>
       </body>
     </html>

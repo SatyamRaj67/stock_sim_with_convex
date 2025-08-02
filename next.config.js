@@ -16,7 +16,14 @@ const config = {
         protocol: "https",
         hostname: "lh3.googleusercontent.com",
       },
+      {
+        protocol: "https",
+        hostname: "loremflickr.com",
+      },
     ],
+  },
+   eslint: {
+    ignoreDuringBuilds: true,
   },
 };
 

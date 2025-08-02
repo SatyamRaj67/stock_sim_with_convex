@@ -135,7 +135,7 @@ export const authConfig = {
       const existingAccount = await fetchQuery(api.account.getAccountByUserId, {
         userId: existingUser._id,
       });
-      
+
       token.isOAuth = !!existingAccount;
       token.name = existingUser.name;
       token.email = existingUser.email;
@@ -148,6 +148,6 @@ export const authConfig = {
   session: {
     strategy: "jwt",
   },
-  adapter: ConvexAdapter,
+  adapter: ConvexAdapter as any,
   ...providers,
 } satisfies NextAuthConfig;

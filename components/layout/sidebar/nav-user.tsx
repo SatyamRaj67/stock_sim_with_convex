@@ -27,9 +27,9 @@ import {
 } from "react-icons/tb";
 import Link from "next/link";
 import { LogoutButton } from "@/components/auth/button/logout-button";
-import type { ExtendedUser } from "@/types";
+import type { Doc } from "@/convex/_generated/dataModel";
 
-export function NavUser({ user }: { user?: ExtendedUser }) {
+export function NavUser({ user }: { user?: Doc<"users"> }) {
   const { isMobile } = useSidebar();
 
   return (
@@ -103,6 +103,15 @@ export function NavUser({ user }: { user?: ExtendedUser }) {
                 <Link href="/notifications">Notifications</Link>
               </DropdownMenuItem>
             </DropdownMenuGroup>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem>
+              <LogoutButton>
+                <div>
+                  <TbLogout />
+                  Log Out
+                </div>
+              </LogoutButton>
+            </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
       </SidebarMenuItem>

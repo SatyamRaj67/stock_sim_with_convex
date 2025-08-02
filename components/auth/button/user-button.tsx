@@ -8,12 +8,20 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { FaUser } from "react-icons/fa";
-import { useCurrentUser } from "@/hooks/useCurrentUser";
 import { LogoutButton } from "@/components/auth/button/logout-button";
 import { LogOutIcon } from "lucide-react";
+import { useQuery } from "convex/react";
+import { api } from "@/convex/_generated/api";
+import { useSession } from "next-auth/react";
 
 export const UserButton = () => {
-  const user = useCurrentUser();
+  const session = useSession();
+
+  if (!session.data?.user) {
+    return null;
+  }
+
+  const user = useQuery(api.user.getUserById, { id: session.data?.user.id });
 
   return (
     <DropdownMenu>

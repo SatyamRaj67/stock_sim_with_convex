@@ -2,7 +2,7 @@
 
 import { Separator } from "@/components/ui/separator";
 import { SidebarTrigger } from "@/components/ui/sidebar";
-import ThemeToggle from "@/components/layout/theme/theme-toggle";
+import ThemeToggle from "../providers/themes/themes-toggle";
 import { usePathname } from "next/navigation";
 
 function formatPathname(pathname: string): string {

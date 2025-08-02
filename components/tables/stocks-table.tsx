@@ -1,0 +1,280 @@
+"use client";
+
+import * as React from "react";
+import Image from "next/image";
+import { usePaginatedQuery } from "convex/react";
+import {
+  type ColumnDef,
+  flexRender,
+  getCoreRowModel,
+  getPaginationRowModel,
+  getSortedRowModel,
+  type SortingState,
+  useReactTable,
+} from "@tanstack/react-table";
+import { TbDotsVertical, TbLayoutColumns } from "react-icons/tb";
+
+import { api } from "@/convex/_generated/api";
+import type { Doc } from "@/convex/_generated/dataModel";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import {
+  DropdownMenu,
+  DropdownMenuCheckboxItem,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { Input } from "@/components/ui/input";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import { DataTablePagination } from "@/components/tables/common/data-table-pagination";
+
+// Helper to format large numbers
+const formatMarketCap = (value: number) => {
+  if (value >= 1_000_000_000_000) {
+    return `${(value / 1_000_000_000_000).toFixed(2)}T`;
+  }
+  if (value >= 1_000_000_000) {
+    return `${(value / 1_000_000_000).toFixed(2)}B`;
+  }
+  if (value >= 1_000_000) {
+    return `${(value / 1_000_000).toFixed(2)}M`;
+  }
+  return value.toString();
+};
+
+// Define the columns for the table
+export const columns: ColumnDef<Doc<"stock">>[] = [
+  {
+    accessorKey: "name",
+    header: ({ column }) => (
+      <Button
+        variant="ghost"
+        onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+      >
+        Name
+      </Button>
+    ),
+    cell: ({ row }) => (
+      <div className="flex items-center gap-3">
+        {/* <Image
+          src={row.original.logoUrl ?? "/placeholder.svg"}
+          alt={row.original.name ?? "Stock logo"}
+          width={32}
+          height={32}
+          className="rounded-full object-cover"
+        /> */}
+        <div className="flex flex-col">
+          <div className="font-medium">{row.original.symbol}</div>
+          <div className="text-muted-foreground max-w-40 truncate text-xs">
+            {row.original.name}
+          </div>
+        </div>
+      </div>
+    ),
+  },
+  {
+    accessorKey: "currentPrice",
+    header: ({ column }) => (
+      <Button
+        variant="ghost"
+        onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+      >
+        Price
+      </Button>
+    ),
+    cell: ({ row }) => (
+      <div>{`$${(row.getValue("currentPrice") as number).toFixed(2)}`}</div>
+    ),
+  },
+  {
+    accessorKey: "marketCap",
+    header: ({ column }) => (
+      <Button
+        variant="ghost"
+        onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+      >
+        Market Cap
+      </Button>
+    ),
+    cell: ({ row }) => (
+      <div>{formatMarketCap(row.getValue("marketCap") as number)}</div>
+    ),
+  },
+  {
+    accessorKey: "sector",
+    header: ({ column }) => (
+      <Button
+        variant="ghost"
+        onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+      >
+        Sector
+      </Button>
+    ),
+  },
+  {
+    accessorKey: "isActive",
+    header: "Status",
+    cell: ({ row }) => {
+      const isActive = row.getValue("isActive");
+      const isFrozen = row.original.isFrozen;
+      return (
+        <div className="flex flex-col gap-1">
+          {isActive ? (
+            <Badge variant="secondary">Active</Badge>
+          ) : (
+            <Badge variant="outline">Inactive</Badge>
+          )}
+          {isFrozen && <Badge variant="destructive">Frozen</Badge>}
+        </div>
+      );
+    },
+  },
+  {
+    id: "actions",
+    header: "Actions",
+    cell: ({ row }) => {
+      return (
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button variant="ghost" className="h-8 w-8 p-0">
+              <span className="sr-only">Open menu</span>
+              <TbDotsVertical className="h-4 w-4" />
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end">
+            <DropdownMenuLabel>Actions</DropdownMenuLabel>
+            <DropdownMenuItem>View Details</DropdownMenuItem>
+            <DropdownMenuItem>Edit Stock</DropdownMenuItem>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem variant="destructive">
+              Delete Stock
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
+      );
+    },
+  },
+];
+
+export function StocksTable() {
+  const [sorting, setSorting] = React.useState<SortingState>([]);
+  const [searchQuery, setSearchQuery] = React.useState("");
+
+  const {
+    results: data,
+    status,
+    loadMore,
+  } = usePaginatedQuery(
+    api.stock.getAllStocks,
+    {
+      searchQuery: searchQuery || undefined,
+    },
+    { initialNumItems: 15 },
+  );
+
+  const table = useReactTable({
+    data: data ?? [],
+    columns,
+    onSortingChange: setSorting,
+    getCoreRowModel: getCoreRowModel(),
+    getPaginationRowModel: getPaginationRowModel(),
+    getSortedRowModel: getSortedRowModel(),
+    state: {
+      sorting,
+    },
+  });
+
+  return (
+    <div className="w-full space-y-4">
+      <div className="flex items-center justify-between">
+        <Input
+          placeholder="Search by name or symbol..."
+          value={searchQuery}
+          onChange={(event) => setSearchQuery(event.target.value)}
+          className="max-w-sm"
+        />
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button variant="outline" className="ml-auto">
+              <TbLayoutColumns className="mr-2 h-4 w-4" /> Columns
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end">
+            {table
+              .getAllColumns()
+              .filter((column) => column.getCanHide())
+              .map((column) => (
+                <DropdownMenuCheckboxItem
+                  key={column.id}
+                  className="capitalize"
+                  checked={column.getIsVisible()}
+                  onCheckedChange={(value) => column.toggleVisibility(!!value)}
+                >
+                  {column.id}
+                </DropdownMenuCheckboxItem>
+              ))}
+          </DropdownMenuContent>
+        </DropdownMenu>
+      </div>
+      <div className="rounded-md border">
+        <Table>
+          <TableHeader>
+            {table.getHeaderGroups().map((headerGroup) => (
+              <TableRow key={headerGroup.id}>
+                {headerGroup.headers.map((header) => (
+                  <TableHead key={header.id}>
+                    {header.isPlaceholder
+                      ? null
+                      : flexRender(
+                          header.column.columnDef.header,
+                          header.getContext(),
+                        )}
+                  </TableHead>
+                ))}
+              </TableRow>
+            ))}
+          </TableHeader>
+          <TableBody>
+            {table.getRowModel().rows?.length ? (
+              table.getRowModel().rows.map((row) => (
+                <TableRow
+                  key={row.id}
+                  data-state={row.getIsSelected() && "selected"}
+                >
+                  {row.getVisibleCells().map((cell) => (
+                    <TableCell key={cell.id}>
+                      {flexRender(
+                        cell.column.columnDef.cell,
+                        cell.getContext(),
+                      )}
+                    </TableCell>
+                  ))}
+                </TableRow>
+              ))
+            ) : (
+              <TableRow>
+                <TableCell
+                  colSpan={columns.length}
+                  className="h-24 text-center"
+                >
+                  {status === "LoadingFirstPage" ? "Loading..." : "No results."}
+                </TableCell>
+              </TableRow>
+            )}
+          </TableBody>
+        </Table>
+      </div>
+      <DataTablePagination table={table} status={status} loadMore={loadMore} />
+    </div>
+  );
+}

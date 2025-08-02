@@ -1,9 +1,9 @@
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import type { User } from "next-auth";
+import type { Doc } from "@/convex/_generated/dataModel";
 
 interface UserInfoProps {
-  user?: User;
+  user?: Doc<"users">;
   label: string;
 }
 
@@ -17,7 +17,7 @@ export const UserInfo = ({ user, label }: UserInfoProps) => {
         <div className="flex flex-row items-center justify-between rounded-lg border p-3 shadow-sm">
           <p className="text-sm font-medium">ID</p>
           <p className="max-w-[180px] truncate rounded-md bg-slate-100 p-1 font-mono text-xs">
-            {user?.id}
+            {user?._id}
           </p>
         </div>
         <div className="flex flex-row items-center justify-between rounded-lg border p-3 shadow-sm">
