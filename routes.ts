@@ -25,7 +25,7 @@ export const adminPrefix = "/admin";
 
 /** The default redirect path after a user logs in
  * @type {string[]} */
-export const DEFAULT_LOGIN_REDIRECT = "/settings";
+export const DEFAULT_LOGIN_REDIRECT = "/dashboard";
 
 /** The default redirect path after a user tries to access a protected route without being authenticated
  * @type {string[]} */
