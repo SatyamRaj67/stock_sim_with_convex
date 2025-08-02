@@ -1,12 +1,12 @@
 import { UserInfo } from "@/components/user-info";
 import { api } from "@/convex/_generated/api";
 import { currentUser } from "@/lib/auth";
-import { useQuery } from "convex/react";
+import { fetchQuery } from "convex/nextjs";
 import { redirect } from "next/navigation";
 import React from "react";
 
 const ServerPage = async () => {
-  const user = useQuery(api.user.getUserById, {
+  const user = await fetchQuery(api.user.getUserById, {
     id: (await currentUser())!.id!,
   });
 
