@@ -46,7 +46,7 @@ export default function CandlestickChart({
       seriesRef.current = null;
     }
 
-    chartRef.current = createChart(chartContainerRef.current!, {
+    chartRef.current = createChart(chartContainerRef.current, {
       layout: {
         textColor: isDark ? "#ffffff" : "#000000",
         background: { color: "transparent" },
@@ -97,7 +97,7 @@ export default function CandlestickChart({
     } else {
       chartRef.current.timeScale().fitContent();
     }
-  }, [priceHistory, isDark, days]);
+  }, [priceHistory, isDark, days, isMobile]);
 
   return priceHistory ? (
     <div ref={chartContainerRef} className="h-full w-full" />

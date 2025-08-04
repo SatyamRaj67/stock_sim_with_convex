@@ -1,8 +1,8 @@
 "use client";
 
-import { useCurrentRole } from "@/hooks/useCurrentRole";
 import { FormError } from "@/components/form-error";
 import type { UserRole } from "@/types";
+import { useSession } from "next-auth/react";
 
 interface RoleGateProps {
   children: React.ReactNode;
@@ -17,7 +17,7 @@ export const RoleGate = ({
   message,
   showMessage,
 }: RoleGateProps) => {
-  const role = useCurrentRole();
+  const role = useSession().data?.user?.role;
 
   if (role !== allowedRoles) {
     if (showMessage) {

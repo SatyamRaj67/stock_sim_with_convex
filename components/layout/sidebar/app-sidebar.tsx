@@ -31,16 +31,13 @@ import { api } from "@/convex/_generated/api";
 import { useSession } from "next-auth/react";
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
-  const session = useSession()
-
-  if (!session.data?.user) {
-    return null;
-  }
-
-  const user = useQuery(api.user.getUserById, {id: session.data?.user.id})
-
+  const session = useSession();
   const pathname = usePathname();
   const { isMobile, setOpenMobile } = useSidebar();
+  const user = useQuery(
+    api.user.getUserById,
+    session?.data?.user?.id ? { id: session.data.user.id } : "skip",
+  );
 
   const handleLinkClick = () => {
     if (isMobile) {

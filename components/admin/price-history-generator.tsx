@@ -59,7 +59,7 @@ export function PriceHistoryGenerator({
         volatility:
           VOLATILITY_PRESETS[volatility as keyof typeof VOLATILITY_PRESETS],
         trend: TREND_PRESETS[trend as keyof typeof TREND_PRESETS],
-        baseVolume: stock.volume || 1000000,
+        baseVolume: stock.volume ?? 1000000,
       });
 
       // Insert all data in one batch operation

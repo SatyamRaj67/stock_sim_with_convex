@@ -47,7 +47,7 @@ const SettingsForm = () => {
       newPassword: undefined,
       name: session.data?.user?.name ?? undefined,
       email: session.data?.user?.email ?? undefined,
-      role: (session.data?.user?.role as UserRole) ?? UserRole.USER,
+      role: session.data?.user?.role ?? UserRole.USER,
       isTwoFactorEnabled: session.data?.user?.isTwoFactorEnabled ?? undefined,
     },
   });

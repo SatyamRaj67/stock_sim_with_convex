@@ -51,7 +51,9 @@ export const columns: ColumnDef<Doc<"users">>[] = [
         Name
       </Button>
     ),
-    cell: ({ row }) => <div className="font-medium">{row.getValue("name")}</div>,
+    cell: ({ row }) => (
+      <div className="font-medium">{row.getValue("name")}</div>
+    ),
   },
   {
     accessorKey: "email",
@@ -71,7 +73,7 @@ export const columns: ColumnDef<Doc<"users">>[] = [
     accessorKey: "role",
     header: "Role",
     cell: ({ row }) => {
-      const role = row.getValue("role") as string;
+      const role = String(row.getValue("role"));
       return (
         <Badge variant={role === "ADMIN" ? "default" : "secondary"}>
           {role}
@@ -83,7 +85,7 @@ export const columns: ColumnDef<Doc<"users">>[] = [
     accessorKey: "_creationTime",
     header: "Joined On",
     cell: ({ row }) => {
-      const timestamp = row.getValue("_creationTime") as number;
+      const timestamp = Number(row.getValue("_creationTime"));
       return <div>{new Date(timestamp).toLocaleDateString()}</div>;
     },
   },
@@ -108,7 +110,9 @@ export const columns: ColumnDef<Doc<"users">>[] = [
             </DropdownMenuItem>
             <DropdownMenuSeparator />
             <DropdownMenuItem>Edit user</DropdownMenuItem>
-            <DropdownMenuItem variant="destructive">Delete user</DropdownMenuItem>
+            <DropdownMenuItem variant="destructive">
+              Delete user
+            </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
       );
@@ -230,9 +234,7 @@ export function UsersTable() {
                   colSpan={columns.length}
                   className="h-24 text-center"
                 >
-                  {status === "LoadingFirstPage"
-                    ? "Loading..."
-                    : "No results."}
+                  {status === "LoadingFirstPage" ? "Loading..." : "No results."}
                 </TableCell>
               </TableRow>
             )}

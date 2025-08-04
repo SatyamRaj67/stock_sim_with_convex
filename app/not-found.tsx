@@ -39,7 +39,7 @@ export default function NotFound() {
             Portfolio Not Found
           </h1>
           <p className="text-muted-foreground mx-auto max-w-md text-xl">
-            Looks like this stock has delisted! The page you're looking for
+            Looks like this stock has delisted.The page you&apos;re looking for
             seems to have gone bearish.
           </p>
         </div>
@@ -54,7 +54,7 @@ export default function NotFound() {
             Error: <span className="text-red-500">-100%</span>
           </div>
           <p className="text-muted-foreground mt-1 text-xs">
-            This URL's performance is down significantly
+            This URL&apos;s performance is down significantly
           </p>
         </div>
 

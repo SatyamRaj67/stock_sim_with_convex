@@ -81,7 +81,7 @@ export const baseColumns: ColumnDef<Doc<"stock">>[] = [
       </Button>
     ),
     cell: ({ row }) => (
-      <div>{`$${(row.getValue("currentPrice") as number).toFixed(2)}`}</div>
+      <div>{`$${Number(row.getValue("currentPrice")).toFixed(2)}`}</div>
     ),
   },
   {
@@ -97,7 +97,7 @@ export const baseColumns: ColumnDef<Doc<"stock">>[] = [
     cell: ({ row }) => (
       <div>
         {row.getValue("marketCap")
-          ? `$${(row.getValue("marketCap") as number).toFixed(2)}`
+          ? `$${Number(row.getValue("marketCap")).toFixed(2)}`
           : "N/A"}
       </div>
     ),
@@ -161,7 +161,7 @@ export function StocksTable() {
       allColumns.push({
         id: "actions",
         header: "Actions",
-        cell: ({ row }) => {
+        cell: () => {
           return (
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
