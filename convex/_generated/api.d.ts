@@ -17,6 +17,7 @@ import type * as account from "../account.js";
 import type * as authAdapter from "../authAdapter.js";
 import type * as http from "../http.js";
 import type * as passwordResetToken from "../passwordResetToken.js";
+import type * as priceHistory from "../priceHistory.js";
 import type * as stock from "../stock.js";
 import type * as transaction from "../transaction.js";
 import type * as twoFactorConfirmation from "../twoFactorConfirmation.js";
@@ -38,6 +39,7 @@ declare const fullApi: ApiFromModules<{
   authAdapter: typeof authAdapter;
   http: typeof http;
   passwordResetToken: typeof passwordResetToken;
+  priceHistory: typeof priceHistory;
   stock: typeof stock;
   transaction: typeof transaction;
   twoFactorConfirmation: typeof twoFactorConfirmation;

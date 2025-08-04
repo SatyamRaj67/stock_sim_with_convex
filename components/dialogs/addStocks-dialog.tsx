@@ -116,7 +116,7 @@ export function AddStocksDialog({ open, onOpenChange }: AddStocksDialogProps) {
           toast.success("Stock created successfully!");
           form.reset();
           onOpenChange(false);
-          setActiveTab("basic"); // Reset to first tab
+          setActiveTab("basic");
         } else {
           toast.error("Failed to create stock. Please try again.");
         }

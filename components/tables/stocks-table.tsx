@@ -197,7 +197,7 @@ export function StocksTable() {
     {
       searchQuery: searchQuery || undefined,
     },
-    { initialNumItems: 15 },
+    { initialNumItems: 150 },
   );
 
   const table = useReactTable({
