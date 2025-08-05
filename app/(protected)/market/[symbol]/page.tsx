@@ -20,6 +20,7 @@ import {
   TbCurrency,
 } from "react-icons/tb";
 import CandlestickChart from "@/components/charts/candlestick-chart";
+import { PageTransition } from "@/animations/transitions/page-transition";
 
 export default async function StockDetailsPage({
   params,
@@ -34,9 +35,12 @@ export default async function StockDetailsPage({
     return notFound();
   }
 
-  const latestPriceHistory = await fetchQuery(api.priceHistory.getLatestPriceHistory, {
-    stockId: stock._id,
-  });
+  const latestPriceHistory = await fetchQuery(
+    api.priceHistory.getLatestPriceHistory,
+    {
+      stockId: stock._id,
+    },
+  );
 
   // Calculate price change (mock data - you can fetch from priceHistory)
   const priceChange = stock.previousClosePrice

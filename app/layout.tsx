@@ -13,7 +13,9 @@ import { Toaster } from "sonner";
 
 import { TRPCReactProvider } from "trpc/react";
 
-import { Analytics } from "@vercel/analytics/next"
+import { Analytics } from "@vercel/analytics/next";
+
+import { PageTransition } from "@/animations/transitions/page-transition";
 
 export const metadata: Metadata = {
   title: "SmartStock - Your Smart Trading Partner",
@@ -58,11 +60,13 @@ export default async function RootLayout({
                 <AppSidebar />
                 <SidebarInset>
                   <Header />
-                  <main>
+                  <div>
                     <Toaster />
-                    {children}
                     <Analytics />
-                  </main>
+                    <PageTransition>
+                      {children}
+                    </PageTransition>
+                  </div>
                 </SidebarInset>
               </SidebarProvider>
             </ThemeProvider>

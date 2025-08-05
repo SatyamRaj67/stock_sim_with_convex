@@ -12,6 +12,8 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { MotionWrapper } from "@/animations/motion-wrapper";
+import { StaggerContainer } from "@/animations/stagger-container";
 import {
   TrendingUp,
   BarChart3,
@@ -54,57 +56,6 @@ export default function HomePage() {
         ".hero-buttons",
         { opacity: 0, y: 20 },
         { opacity: 1, y: 0, duration: 1, delay: 0.4, ease: "power3.out" },
-      );
-
-      // Features animation
-      gsap.fromTo(
-        ".feature-card",
-        { opacity: 0, y: 60, scale: 0.9 },
-        {
-          opacity: 1,
-          y: 0,
-          scale: 1,
-          duration: 0.8,
-          stagger: 0.1,
-          ease: "power3.out",
-          scrollTrigger: {
-            trigger: featuresRef.current,
-            start: "top 80%",
-          },
-        },
-      );
-
-      // Stats animation
-      gsap.fromTo(
-        ".stat-item",
-        { opacity: 0, scale: 0.8 },
-        {
-          opacity: 1,
-          scale: 1,
-          duration: 0.6,
-          stagger: 0.1,
-          ease: "back.out(1.7)",
-          scrollTrigger: {
-            trigger: statsRef.current,
-            start: "top 80%",
-          },
-        },
-      );
-
-      // CTA animation
-      gsap.fromTo(
-        ".cta-content",
-        { opacity: 0, y: 40 },
-        {
-          opacity: 1,
-          y: 0,
-          duration: 0.8,
-          ease: "power3.out",
-          scrollTrigger: {
-            trigger: ctaRef.current,
-            start: "top 80%",
-          },
-        },
       );
 
       // Floating animation for icons
@@ -179,7 +130,7 @@ export default function HomePage() {
 
   return (
     <div className="bg-background text-foreground min-h-screen">
-      {/* Hero Section */}
+      {/* Hero Section - Keep existing GSAP animations */}
       <section
         ref={heroRef}
         className="relative flex min-h-screen items-center justify-center overflow-hidden px-4"
@@ -227,13 +178,13 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Stats Section */}
+      {/* Stats Section with Motion */}
       <section ref={statsRef} className="bg-muted/50 px-4 py-20">
         <div className="mx-auto max-w-6xl">
-          <div className="grid grid-cols-2 gap-8 md:grid-cols-4">
+          <StaggerContainer className="grid grid-cols-2 gap-8 md:grid-cols-4">
             {stats.map((stat, index) => (
-              <div key={index} className="stat-item text-center">
-                <Card className="border-0 bg-transparent">
+              <MotionWrapper key={index} hover scale>
+                <Card className="border-0 bg-transparent text-center">
                   <CardContent className="pt-6">
                     <div className="text-primary mb-4 flex justify-center">
                       {stat.icon}
@@ -244,50 +195,49 @@ export default function HomePage() {
                     </div>
                   </CardContent>
                 </Card>
-              </div>
+              </MotionWrapper>
             ))}
-          </div>
+          </StaggerContainer>
         </div>
       </section>
 
-      {/* Features Section */}
+      {/* Features Section with Motion */}
       <section ref={featuresRef} className="px-4 py-20">
         <div className="mx-auto max-w-6xl">
-          <div className="mb-16 text-center">
+          <MotionWrapper variant="fade" className="mb-16 text-center">
             <h2 className="mb-4 text-4xl font-bold">Powerful Features</h2>
             <p className="text-muted-foreground mx-auto max-w-2xl text-xl">
               Everything you need to make smarter investment decisions and
               maximize your returns.
             </p>
-          </div>
+          </MotionWrapper>
 
-          <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
+          <StaggerContainer className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
             {features.map((feature, index) => (
-              <Card
-                key={index}
-                className="feature-card group border-muted transition-all duration-300 hover:shadow-lg"
-              >
-                <CardHeader>
-                  <div className="text-primary mb-4 transition-transform group-hover:scale-110">
-                    {feature.icon}
-                  </div>
-                  <CardTitle className="text-xl">{feature.title}</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <CardDescription className="text-base leading-relaxed">
-                    {feature.description}
-                  </CardDescription>
-                </CardContent>
-              </Card>
+              <MotionWrapper key={index} hover scale>
+                <Card className="group border-muted transition-all duration-300 hover:shadow-lg">
+                  <CardHeader>
+                    <div className="text-primary mb-4 transition-transform group-hover:scale-110">
+                      {feature.icon}
+                    </div>
+                    <CardTitle className="text-xl">{feature.title}</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <CardDescription className="text-base leading-relaxed">
+                      {feature.description}
+                    </CardDescription>
+                  </CardContent>
+                </Card>
+              </MotionWrapper>
             ))}
-          </div>
+          </StaggerContainer>
         </div>
       </section>
 
-      {/* CTA Section */}
+      {/* CTA Section with Motion */}
       <section ref={ctaRef} className="bg-muted/50 px-4 py-20">
         <div className="mx-auto max-w-4xl text-center">
-          <div className="cta-content">
+          <MotionWrapper variant="slide-up">
             <h2 className="mb-6 text-4xl font-bold">
               Ready to Start Trading Smarter?
             </h2>
@@ -304,7 +254,7 @@ export default function HomePage() {
                 Contact Sales
               </Button>
             </div>
-          </div>
+          </MotionWrapper>
         </div>
       </section>
     </div>
