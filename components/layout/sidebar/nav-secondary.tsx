@@ -29,7 +29,7 @@ export function NavSecondary({
 
   const handleLinkClick = () => {
     if (isMobile) {
-      setOpenMobile(false); // Close sidebar only if mobile
+      setOpenMobile(false); 
     }
   };
   return (

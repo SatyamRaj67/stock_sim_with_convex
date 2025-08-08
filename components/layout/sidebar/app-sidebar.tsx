@@ -34,6 +34,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const session = useSession();
   const pathname = usePathname();
   const { isMobile, setOpenMobile } = useSidebar();
+
   const user = useQuery(
     api.user.getUserById,
     session?.data?.user?.id ? { id: session.data.user.id } : "skip",

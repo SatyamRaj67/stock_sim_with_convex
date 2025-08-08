@@ -1,4 +1,4 @@
-import { Header } from "@/components/layout/header";
+import { Header } from "@/components/layout/header/header";
 import { AppSidebar } from "@/components/layout/sidebar/app-sidebar";
 import ConvexClientProvider from "@/components/providers/convex/convex-provider-with-auth";
 import { ThemeProvider } from "@/components/providers/themes/theme-provider";
@@ -15,7 +15,10 @@ import { TRPCReactProvider } from "trpc/react";
 
 import { Analytics } from "@vercel/analytics/next";
 
-import { PageTransition } from "@/animations/transitions/page-transition";
+import gsap from "gsap";
+import { ScrollSmoother } from "gsap/ScrollSmoother";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { BarChart3, PieChart, TrendingUp } from "lucide-react";
 
 export const metadata: Metadata = {
   title: "SmartStock - Your Smart Trading Partner",
@@ -27,6 +30,8 @@ const geist = Geist({
   subsets: ["latin"],
   variable: "--font-geist-sans",
 });
+
+gsap.registerPlugin(ScrollSmoother, ScrollTrigger);
 
 export default async function RootLayout({
   children,
@@ -63,9 +68,7 @@ export default async function RootLayout({
                   <div>
                     <Toaster />
                     <Analytics />
-                    <PageTransition>
-                      {children}
-                    </PageTransition>
+                    {children}
                   </div>
                 </SidebarInset>
               </SidebarProvider>

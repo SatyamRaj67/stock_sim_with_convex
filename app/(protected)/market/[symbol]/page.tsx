@@ -20,7 +20,6 @@ import {
   TbCurrency,
 } from "react-icons/tb";
 import CandlestickChart from "@/components/charts/candlestick-chart";
-import { PageTransition } from "@/animations/transitions/page-transition";
 
 export default async function StockDetailsPage({
   params,
