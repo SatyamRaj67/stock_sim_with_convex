@@ -12,7 +12,14 @@ import {
   type SortingState,
   useReactTable,
 } from "@tanstack/react-table";
-import { TbDotsVertical, TbLayoutColumns, TbPlus } from "react-icons/tb";
+import {
+  TbDotsVertical,
+  TbLayoutColumns,
+  TbPlus,
+  TbEye,
+  TbEdit,
+  TbTrash,
+} from "react-icons/tb";
 
 import { api } from "@/convex/_generated/api";
 import type { Doc } from "@/convex/_generated/dataModel";
@@ -39,6 +46,7 @@ import {
 import { DataTablePagination } from "@/components/tables/common/data-table-pagination";
 import { usePathname } from "next/navigation";
 import { AddStocksDialog } from "../dialogs/addStocks-dialog";
+import Link from "next/link";
 
 // Define the columns for the table
 export const baseColumns: ColumnDef<Doc<"stock">>[] = [
@@ -139,11 +147,12 @@ export function StocksTable() {
   const [addStocksDialogOpen, setAddStocksDialogOpen] = React.useState(false);
 
   const pathName = usePathname();
+  const isAdminPage = pathName.includes("/admin");
 
   const columns = React.useMemo<ColumnDef<Doc<"stock">>[]>(() => {
     const allColumns = [...baseColumns];
 
-    if (pathName.includes("/admin")) {
+    if (isAdminPage) {
       allColumns.push({
         accessorKey: "_creationTime",
         header: ({ column }) => (
@@ -161,32 +170,59 @@ export function StocksTable() {
       allColumns.push({
         id: "actions",
         header: "Actions",
-        cell: () => {
+        cell: ({ row }) => {
           return (
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button variant="ghost" className="h-8 w-8 p-0">
-                  <span className="sr-only">Open menu</span>
-                  <TbDotsVertical className="h-4 w-4" />
+            <div className="flex items-center gap-1">
+              <Link href={`/market/${row.original.symbol}`}>
+                <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
+                  <span className="sr-only">View stock</span>
+                  <TbEye className="h-4 w-4" />
                 </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="end">
-                <DropdownMenuLabel>Actions</DropdownMenuLabel>
-                <DropdownMenuItem>View Details</DropdownMenuItem>
-                <DropdownMenuItem>Edit Stock</DropdownMenuItem>
-                <DropdownMenuSeparator />
-                <DropdownMenuItem variant="destructive">
-                  Delete Stock
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
+              </Link>
+              <Link href={`/admin/market/${row.original.symbol}`}>
+                <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
+                  <span className="sr-only">Edit stock</span>
+                  <TbEdit className="h-4 w-4" />
+                </Button>
+              </Link>
+              <Button
+                variant="ghost"
+                size="sm"
+                className="text-destructive hover:text-destructive h-8 w-8 p-0"
+                onClick={() => {
+                  // Handle delete action - functionality to be added later
+                  console.log("Delete", row.original);
+                }}
+              >
+                <span className="sr-only">Delete stock</span>
+                <TbTrash className="h-4 w-4" />
+              </Button>
+            </div>
+          );
+        },
+      });
+    } else {
+      // For non-admin pages, only show view action
+      allColumns.push({
+        id: "actions",
+        header: "Actions",
+        cell: ({ row }) => {
+          return (
+            <div className="flex items-center">
+              <Link href={`/market/${row.original.symbol}`}>
+                <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
+                  <span className="sr-only">View stock</span>
+                  <TbEye className="h-4 w-4" />
+                </Button>
+              </Link>
+            </div>
           );
         },
       });
     }
 
     return allColumns;
-  }, [pathName]);
+  }, [isAdminPage]);
 
   const {
     results: data,
@@ -225,7 +261,7 @@ export function StocksTable() {
           onChange={(event) => setSearchQuery(event.target.value)}
           className="max-w-sm"
         />
-        {pathName.includes("/admin") && (
+        {isAdminPage && (
           <Button className="mx-2" onClick={onClick}>
             <TbPlus />
             Add Stocks
