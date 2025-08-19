@@ -22,7 +22,8 @@ const config = {
       },
     ],
   },
-   eslint: {
+  transpilePackages: ["three"],
+  eslint: {
     ignoreDuringBuilds: true,
   },
 };

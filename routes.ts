@@ -1,7 +1,12 @@
 /***An Array of routes that are public
 These routes are accessible without authentication
 @type {string[]} */
-export const publicRoutes = ["/", "/auth/new-verification", "/learn", "/learn/test"];
+export const publicRoutes = [
+  "/",
+  "/auth/new-verification",
+  "/test",
+  "/learn",
+];
 
 /**An Array of routes that are user for authentication
  These routes will redirect loggen in users to /settings

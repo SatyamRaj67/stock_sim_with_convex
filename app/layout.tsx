@@ -1,10 +1,11 @@
+import "@/styles/globals.css";
+
 import { Header } from "@/components/layout/header/header";
 import { AppSidebar } from "@/components/layout/sidebar/app-sidebar";
 import ConvexClientProvider from "@/components/providers/convex/convex-provider-with-auth";
 import { ThemeProvider } from "@/components/providers/themes/theme-provider";
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
 import { auth } from "@/server/auth";
-import "@/styles/globals.css";
 
 import { type Metadata } from "next";
 import { Geist } from "next/font/google";
@@ -18,7 +19,6 @@ import { Analytics } from "@vercel/analytics/next";
 import gsap from "gsap";
 import { ScrollSmoother } from "gsap/ScrollSmoother";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { BarChart3, PieChart, TrendingUp } from "lucide-react";
 
 export const metadata: Metadata = {
   title: "SmartStock - Your Smart Trading Partner",

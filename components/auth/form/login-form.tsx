@@ -88,111 +88,106 @@ export const LoginForm = () => {
   };
 
   return (
-    <div className="relative flex min-h-screen items-center justify-center overflow-hidden">
-      {/* Main Form Container */}
-      <CardWrapper
-        headerLabel="Welcome Back"
-        backButtonLabel="Don't have an account?"
-        backButtonHref="/auth/register"
-        showSocial
-      >
-        <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-            {showTwoFactor && (
+    <CardWrapper
+      headerLabel="Welcome Back"
+      backButtonLabel="Don't have an account?"
+      backButtonHref="/auth/register"
+      showSocial
+    >
+      <Form {...form}>
+        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+          {showTwoFactor && (
+            <FormField
+              control={form.control}
+              name="code"
+              render={({ field }) => (
+                <FormItem className="flex flex-col items-center">
+                  <FormLabel className="text-center">Two-Factor Code</FormLabel>
+                  <FormControl className="flex justify-center">
+                    <InputOTP
+                      {...field}
+                      maxLength={6}
+                      disabled={isPending}
+                      pattern={REGEXP_ONLY_DIGITS}
+                    >
+                      <InputOTPGroup>
+                        <InputOTPSlot index={0} />
+                        <InputOTPSlot index={1} />
+                        <InputOTPSlot index={2} />
+                      </InputOTPGroup>
+                      <InputOTPSeparator />
+                      <InputOTPGroup>
+                        <InputOTPSlot index={3} />
+                        <InputOTPSlot index={4} />
+                        <InputOTPSlot index={5} />
+                      </InputOTPGroup>
+                    </InputOTP>
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          )}
+          {!showTwoFactor && (
+            <>
               <FormField
                 control={form.control}
-                name="code"
+                name="email"
                 render={({ field }) => (
-                  <FormItem className="flex flex-col items-center">
-                    <FormLabel className="text-center">
-                      Two-Factor Code
-                    </FormLabel>
-                    <FormControl className="flex justify-center">
-                      <InputOTP
+                  <FormItem>
+                    <FormLabel> Email</FormLabel>
+                    <FormControl>
+                      <Input
                         {...field}
-                        maxLength={6}
                         disabled={isPending}
-                        pattern={REGEXP_ONLY_DIGITS}
-                      >
-                        <InputOTPGroup>
-                          <InputOTPSlot index={0} />
-                          <InputOTPSlot index={1} />
-                          <InputOTPSlot index={2} />
-                        </InputOTPGroup>
-                        <InputOTPSeparator />
-                        <InputOTPGroup>
-                          <InputOTPSlot index={3} />
-                          <InputOTPSlot index={4} />
-                          <InputOTPSlot index={5} />
-                        </InputOTPGroup>
-                      </InputOTP>
+                        placeholder="ananya@mine.com"
+                        type="email"
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
                 )}
               />
-            )}
-            {!showTwoFactor && (
-              <>
-                <FormField
-                  control={form.control}
-                  name="email"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel> Email</FormLabel>
-                      <FormControl>
-                        <Input
-                          {...field}
-                          disabled={isPending}
-                          placeholder="ananya@mine.com"
-                          type="email"
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
 
-                <FormField
-                  control={form.control}
-                  name="password"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel> Password</FormLabel>
-                      <FormControl>
-                        <Input
-                          {...field}
-                          disabled={isPending}
-                          placeholder="******"
-                          type="password"
-                        />
-                      </FormControl>
+              <FormField
+                control={form.control}
+                name="password"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel> Password</FormLabel>
+                    <FormControl>
+                      <Input
+                        {...field}
+                        disabled={isPending}
+                        placeholder="******"
+                        type="password"
+                      />
+                    </FormControl>
 
-                      <Button
-                        size="sm"
-                        variant="link"
-                        asChild
-                        className="px-0 font-normal"
-                      >
-                        <Link href="/auth/reset">Forgot Password?</Link>
-                      </Button>
+                    <Button
+                      size="sm"
+                      variant="link"
+                      asChild
+                      className="px-0 font-normal"
+                    >
+                      <Link href="/auth/reset">Forgot Password?</Link>
+                    </Button>
 
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-              </>
-            )}
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </>
+          )}
 
-            <FormError message={error ?? urlError} />
-            <FormSuccess message={success} />
+          <FormError message={error ?? urlError} />
+          <FormSuccess message={success} />
 
-            <Button disabled={isPending} type="submit" className="w-full">
-              {showTwoFactor ? "Confirm" : "Login"}
-            </Button>
-          </form>
-        </Form>
-      </CardWrapper>
-    </div>
+          <Button disabled={isPending} type="submit" className="w-full">
+            {showTwoFactor ? "Confirm" : "Login"}
+          </Button>
+        </form>
+      </Form>
+    </CardWrapper>
   );
 };
